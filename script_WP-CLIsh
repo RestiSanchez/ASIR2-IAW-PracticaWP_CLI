@@ -10,7 +10,7 @@ apt update
 
 # Actualizamos los paquetes
 
-apt upgrade
+apt upgrade -y
 
 # Instalamos el servidor web Apache
 
@@ -54,12 +54,10 @@ mv wp-cli.phar /usr/local/bin/wp
 # Cambiamos al directorio de instalación
 cd /var/www/html
 # Descargamos el Wordpress en español
-wp core download --locale=es_ES
+wp core download --locale=es_ES --allow-root
 
 # Crear el archivo de configuración
-wp config create --dbname=$BD_NOMBRE --dbuser=$BD_USUARIO --dbpass=$BD_PASS
+wp config create --dbname=$BD_NOMBRE --dbuser=$BD_USUARIO --dbpass=$BD_PASS --allow-root
 
 # Instalamos el cliente de Wordpress
-wp core install --url=$URL --title="IAW" --admin_user=resti --admin_password=root --admin_email=test@test.com
-
-# 
+wp core install --url=$URL --title="IAW" --admin_user=resti --admin_password=root --admin_email=test@test.com --allow-root
