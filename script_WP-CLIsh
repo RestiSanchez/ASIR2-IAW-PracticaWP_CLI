@@ -35,12 +35,12 @@ BD_PASS=root
 URL=http://xxxx
 # Configuración de base de datos
 
-mysql -u root <<< "DROP DATABASE IF EXISTS $DB_NAME;"
-mysql -u root <<< "CREATE DATABASE $DB_NAME;"
-mysql -u root <<< "DROP USER IF EXISTS $DB_USER@$IP_PRIVADA_FRONT;"
-mysql -u root <<< "CREATE USER $DB_USER@$IP_PRIVADA_FRONT IDENTIFIED BY '$DB_PASSWORD';"
-mysql -u root <<< "GRANT ALL PRIVILEGES ON $DB_NAME.* TO $DB_USER@$IP_PRIVADA_FRONT;"
-mysql -u root <<< "FLUSH PRIVILEGES;"
+mysql -u root <<< "DROP DATABASE IF EXISTS $BD_NOMBRE;"
+mysql -u root <<<"CREATE DATABASE $BD_NOMBRE;"
+mysql -u root <<<"DROP USER IF EXISTS $BD_USUARIO@$IP_FRONT;"
+mysql -u root <<<"CREATE USER $BD_USUARIO@$IP_FRONT IDENTIFIED BY '$BD_PASS';"
+mysql -u root <<<"GRANT ALL PRIVILEGES ON $BD_NOMBRE.* TO $BD_USUARIO@$IP_FRONT;"
+mysql -u root <<<"FLUSH PRIVILEGES;"
 
 # Nos descargamos el cliente de Wordpress
 wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
@@ -60,4 +60,4 @@ wp core download --locale=es_ES --allow-root
 wp config create --dbname=$BD_NOMBRE --dbuser=$BD_USUARIO --dbpass=$BD_PASS --allow-root
 
 # Instalamos el cliente de Wordpress
-wp core install --url=$URL --title="IAW" --admin_user=resti --admin_password=root --admin_email=test@test.com --allow-root
+wp core install --url=$URL --title="IAW_RESTI" --admin_user=resti --admin_password=root --admin_email=test@test.com --allow-root
