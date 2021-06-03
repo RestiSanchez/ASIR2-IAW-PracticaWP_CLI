@@ -46,3 +46,70 @@ Antes de crear el archivo de configuración debemos crear en MySQL Server la bas
 
 Una vez que hemos creado la base de datos, usuario y contraseña en MySQL Server, podemos crear el archivo de configuración `wp-config.php` para Wordpress con el siguiente comando:
 `wp config create --dbname=wordpress_db --dbuser=wordpress_user --dbpass=wordpress_password`
+
+EN este paso le indicamos los siguientes parámetros:
+ - `--dbname=wordpress_db` (Nombre de la BD)
+ - `--dbuser=wordpress_user`(Usuario de la BD)
+ - `--dbpass=wordpress_password`(Contraseña del usuario de BD)
+
+Al crear el archivo de configuración se creearán automáticamente los valores aleatorios para las security Keys.
+
+### Paso 4. Instalación de Wordpress (`wp core install`)
+
+Una vez que tenemos la base de datos creada y el archivo de configuración preparado podemos realizar la instalación de WordPress con el comando:
+`wp core install --url=localhost --title="IAW" --admin_user=admin --admin_password=admin_password --admin_email=test@test.com`
+
+En este paso le estamos indicando los siguientes parámetros:
+
+- `--url=localhost`(DOminio del sitio Wordpress. En nuestro caso será `localhost` o la dirección IP del servidor. En una instalación en producción utilizaremos el nombre del dominio del sitio)
+- `--tittle="IAW"` (Titulo del sitio de Wordpress)
+- `--admin_user=admin`(Nombre del usuario administrador)
+- `--admin_password=admin_password`(Contraseña del usuario administrador)
+- `--admin_email=test@test.com`(Email del usuario administrador)
+
+
+
+
+## Parte del Script WP-CLI
+Teniendo en cuenta que esta todo instalado de la pila LAMP
+```
+######################
+#   Variables        #
+######################
+
+BD_NOMBRE=wpiaw
+BD_USUARIO=resti
+IP_FRONT=localhost
+BD_PASS=root
+URL=http://34.229.179.16
+# Configuración de base de datos
+
+mysql -u root <<< "DROP DATABASE IF EXISTS $BD_NOMBRE;"
+mysql -u root <<<"CREATE DATABASE $BD_NOMBRE;"
+mysql -u root <<<"DROP USER IF EXISTS $BD_USUARIO@$IP_FRONT;"
+mysql -u root <<<"CREATE USER $BD_USUARIO@$IP_FRONT IDENTIFIED BY '$BD_PASS';"
+mysql -u root <<<"GRANT ALL PRIVILEGES ON $BD_NOMBRE.* TO $BD_USUARIO@$IP_FRONT;"
+mysql -u root <<<"FLUSH PRIVILEGES;"
+
+# Nos descargamos el cliente de Wordpress
+wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+# Damos permisos de ejecución
+chmod +x wp-cli.phar
+
+# Lo movemos a la ruta indicada
+mv wp-cli.phar /usr/local/bin/wp
+
+# Cambiamos al directorio de instalación
+cd /var/www/html
+rm -rf index.html
+# Descargamos el Wordpress en español
+wp core download --locale=es_ES --allow-root
+
+# Crear el archivo de configuración
+wp config create --dbname=$BD_NOMBRE --dbuser=$BD_USUARIO --dbpass=$BD_PASS --allow-root
+
+# Instalamos el cliente de Wordpress
+wp core install --url=$URL --title="IAW_RESTI" --admin_user=resti --admin_password=root --admin_email=test@test.com --allow-root
+
+```
